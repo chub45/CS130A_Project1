@@ -15,10 +15,9 @@ int main(){
                             "b", "c", "ree", 
                             "z", "b", "wow"};
     BST testBST;
-    Node* root = new Node();
     HTable testHTable(10);
     for(int i = 0; i < 10; i++){
-        testBST.insert(root, listNames[i]);
+        testBST.insert(listNames[i]);
         testHTable.insert(listNames[i]);
     }
 

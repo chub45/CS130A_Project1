@@ -17,15 +17,11 @@ public:
 //constructor
 BST();
 //Other methods
-void insert(Node*& root, std::string &value);
-bool search(Node*& root, std::string &value);
-void remove(Node*& root, std::string &value);
-void removeNode(Node*& root); //remove helper
-void findMin(Node*& root, std::string &value);
-void sort();
-void rangeSearch(std::string &value1, std::string &value2);
-//const Node* getRoot();
-void Delete(Node*& root); //destructor helper
+void insert(std::string &value){insertHelper(root, value);}
+bool search(std::string &value){return searchHelper(root, value);}
+void remove(std::string &value){removeHelper(root, value);}
+void sort(){sort(root);}
+void rangeSearch(std::string &value1, std::string &value2){rangeSearchHelper(root, value1, value2);}
 //destructor
 ~BST();
 
@@ -33,6 +29,14 @@ void Delete(Node*& root); //destructor helper
 
 private:
 Node* root;
-
+//Helper methods for traversing recursively
+void insertHelper(Node*& root, std::string &value);
+bool searchHelper(Node*& root, std::string &value);
+void removeHelper(Node*& root, std::string &value);
+void removeNode(Node*& root);
+void findMinHelper(Node*& root, std::string &value);
+void sort(Node*& root);
+void rangeSearchHelper(Node*& root, std::string &value1, std::string &value2);
+void Delete(Node*& root);
 };
 #endif

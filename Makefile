@@ -9,16 +9,10 @@ EXECUTABLE = main
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE) : $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o $@
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-main.o : main.cpp BST.h HTable.h
-	$(CC) $(CFLAGS) main.cpp
-
-BST.o : BST.cpp BST.h 
-	$(CC) $(CFLAGS) BST.cpp
-
-HTable.o : HTable.cpp HTable.h
-	$(CC) $(CFLAGS) HTable.cpp
+%.o: %.cpp $(DEPS)
+	$(CC) $(CFLAGS) *.cpp
 
 clean:
 	rm $(EXECUTABLE) $(OBJECTS)

@@ -10,7 +10,7 @@ BST::BST(){
     root = NULL;
 }
 
-void BST::insert(Node*& root, string &value){
+void BST::insertHelper(Node*& root, string &value){
     if(root == NULL){
         root = new Node();
         root->left = NULL;
@@ -20,16 +20,17 @@ void BST::insert(Node*& root, string &value){
     }
     else if(value == root->word){
         root->counter++;
+        return;
     }
     else if(value < root->word) {
-        root->left = insert(value);
+        insertHelper(root->left, value);
     }
     else{
-        root->right = insert(value);
+        insertHelper(root->right, value);
     }
 }
 
-bool BST::search(Node*& root, string &value){
+bool BST::searchHelper(Node*& root, string &value){
     if(root == NULL){
         return false;
     }
@@ -37,23 +38,23 @@ bool BST::search(Node*& root, string &value){
         return true;
     }
     else if(value <= root->word){
-        search(root->left, value);
+        return searchHelper(root->left, value);
     }
     else{
-        search(root->right, value);
+        return searchHelper(root->right, value);
     }
 }
 
-void BST::remove(Node*& root, string &value){
+void BST::removeHelper(Node*& root, string &value){
     if(root->word < value){
-        remove(root->left, value);
+        removeHelper(root->left, value);
     }
     else if(root->word > value){
-        remove(root->right, value);
+        removeHelper(root->right, value);
     }
     else{
         if(root->counter > 1){
-            counter--;
+            root->counter--;
         }
         else{
             removeNode(root);
@@ -73,38 +74,38 @@ void BST::removeNode(Node*& root){
     }
     else{
         //find minimum of right subtree
-        BST::findMin(root->right, value);
+        BST::findMinHelper(root->right, value);
         root->word = value;
-        BST::remove(root->right, value);
+        BST::removeHelper(root->right, value);
     }
 }
 
-void BST::findMin(Node*& root, string &value){
+void BST::findMinHelper(Node*& root, string &value){
     while(root->left != NULL){
         root = root->left;
-        value = root->value;
+        value = root->word;
     }
 }
 
-void sort(){
-    while(root != NULL){
+void BST::sort(Node*& root){
+    while(BST::root != NULL){
         sort(root->left);
         cout << root->word << " ";
         sort(root->right);
     }
 }
-void BST::rangeSearch(string &value1, string &value2){
-    if(root == null){
+void BST::rangeSearchHelper(Node*& root, string &value1, string &value2){
+    if(root == NULL){
         return;
     }
     if(value1 <= root->word){
-        rangeSearch(root->left, value1, value2);
+        rangeSearchHelper(root->left, value1, value2);
     }
     if(value1 <= root->word && value2 >= root->word){
         cout << root->word << " ";
     }
     if(value2 >= root->word){
-        rangeSearch(root->right, value1, value2);
+        rangeSearchHelper(root->right, value1, value2);
     }
 }
 /*const Node* BST::getRoot(){

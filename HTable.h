@@ -3,8 +3,14 @@
 
 #ifndef HTABLE_H
 #define HTABLE_H
+#include <string>
 
 class HTable{
+private:
+struct Node{
+    std::string word;
+    int count;
+};
 public:
 //constructor
 HTable(unsigned int size);
@@ -19,13 +25,9 @@ void rangeSearch(std::string &value1, std::string &value2);
 ~HTable();
 
 private:
-struct Node{
-    std::string word;
-    int count;
-};
-
-Node* hTable;
+Node** table;
 bool* hadOccupied;
+unsigned int tableSize;
 };
 
 
