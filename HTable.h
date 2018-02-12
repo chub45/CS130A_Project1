@@ -16,10 +16,10 @@ public:
 HTable(unsigned int size);
 //other methods
 unsigned int hash(std::string &value);
-int search(std::string &value);
+bool search(std::string &value);
 void insert(std::string &value);
 bool remove(std::string &value);
-void sort();
+void sort(std::string &filePath);
 void rangeSearch(std::string &value1, std::string &value2);
 //destructor
 ~HTable();
@@ -28,6 +28,8 @@ private:
 Node** table;
 bool* hadOccupied;
 unsigned int tableSize;
+unsigned int usedSize;
+unsigned int locationStore;
 };
 
 

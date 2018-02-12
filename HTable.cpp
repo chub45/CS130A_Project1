@@ -2,11 +2,16 @@
 //Benson Chu
 
 #include "HTable.h"
+#include <iostream>
 #include <cassert>
+#include <fstream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 //default constructor for hash table
 HTable::HTable(unsigned int size){
+    usedSize = 0;
     tableSize = size;
     table = new Node*[size];
     hadOccupied = new bool[size];
@@ -16,27 +21,30 @@ HTable::HTable(unsigned int size){
     }
 }
 
-//hash function that converts string to int key
+//hash function that converts string to int
 unsigned int HTable::hash(string &value){
-    int index;
-//    for(int i = 0; i < value.length; i++){
-        //find clever way to effectively hash
-  //  }
-  return 1;
+    unsigned int index = 0;
+    for(unsigned int i = 0; i < value.length(); i++){
+        index += (unsigned int) value[i];
+    }
+    return index % tableSize;
 }
 
 //search returns location of object if successful
-//otherwise returns 0
-int HTable::search(string &value){
-    unsigned int index = HTable::hash(value);
+//otherwise returns false
+bool HTable::search(string &value){
+    unsigned int index = hash(value);
     bool objectFound = false;
     while(!objectFound){
         if(table[index] == NULL && 
-           hadOccupied == false){
-            return 0;
+           hadOccupied[index] == false){
+            locationStore = 0;
+            return false;
         }
-        else if(table[index]->word == value){
+        else if(table[index] != NULL && table[index]->word == value){
+            locationStore = index;
             objectFound = true;
+            return true;
         }
         else{
             index++;
@@ -45,17 +53,22 @@ int HTable::search(string &value){
             }
         }
     }
-    return index;
+    return false;
 }
-
 
 void HTable::insert(string &value){
     unsigned int index;
     bool foundSpace = false;
-    if(HTable::search(value)){
-        table[HTable::search(value)]->count++;
+    //if word is already in table
+    if(usedSize >= tableSize){
+        cout << "Cannot add anymore values. " << endl;
+        return;
+    }
+    if(search(value)){
+       table[locationStore]->count++;
     }
     else{
+        //creates new node and inserts to empty space
         index = hash(value);
         while(!foundSpace){
             if(table[index] == NULL){
@@ -63,6 +76,7 @@ void HTable::insert(string &value){
                 table[index]->word = value;
                 table[index]->count = 1;
                 hadOccupied[index] = true;
+                usedSize++;
                 foundSpace = true;
             }
             else{
@@ -77,8 +91,9 @@ void HTable::insert(string &value){
 
 bool HTable::remove(string &value){
     int index;
-    if(HTable::search(value)){
-        index = HTable::search(value);
+    //check first to see if word is in table
+    if(search(value)){
+        index = locationStore;
         if(table[index]->count > 1){
             table[index]->count--;
             return true;
@@ -86,6 +101,7 @@ bool HTable::remove(string &value){
         else{
             delete table[index];
             table[index] = NULL;
+            usedSize--;
             return true;
         }
     }
@@ -94,12 +110,48 @@ bool HTable::remove(string &value){
     }
 }
 
-void HTable::sort(){
-//prints out words lexicographically as list    
+void HTable::sort(string &filePath){
+//prints out words lexicographically as list and write them to a file
+    vector<string> sortVector;
+    for(unsigned int i = 0; i < tableSize; i++){
+        if(table[i] != NULL){
+            sortVector.push_back(table[i]->word);
+        }
+    }
+    //need to use sort using O(log(n)) algorithm
+    ofstream myfile;
+    myfile.open(filePath);
+    std::sort(sortVector.begin(), sortVector.end());
+    for(unsigned int i = 0; i < sortVector.size(); i++){
+        myfile << sortVector[i] << endl;
+    }
+    myfile.close();
+
 }
 
-void rangeSearch(string &value1, string &value2){
+void HTable::rangeSearch(string &value1, string &value2){
 //prints out words between two strings
+    unsigned int front = 0, back = tableSize;
+    if(search(value1) && search(value2)){
+        for(unsigned int i = 0; i < tableSize; i++){
+            if(table[i]->word == value1){
+                front = i;
+                break;
+            }
+        }
+        for(unsigned int i = front; i < tableSize; i++){
+            if(table[i]->word == value2){
+                back = i;
+                break;
+            }
+        }
+        for(unsigned int i = front; i < back; i++){
+           if(table[i] != NULL){ 
+                cout << table[i] << endl; 
+           }
+        }
+    }
+    
 }
 
 HTable::~HTable(){

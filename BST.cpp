@@ -4,6 +4,7 @@
 #include "BST.h"
 #include <cassert>
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 BST::BST(){
@@ -87,13 +88,17 @@ void BST::findMinHelper(Node*& root, string &value){
     }
 }
 
-void BST::sort(Node*& root){
+void BST::sortHelper(string &filePath, Node*& root){
+    ofstream myfile;
+    myfile.open(filePath);
     while(BST::root != NULL){
-        sort(root->left);
-        cout << root->word << " ";
-        sort(root->right);
+        sortHelper(filePath, root->left);
+        myfile << root->word << endl;
+        sortHelper(filePath, root->right);
     }
+    myfile.close();
 }
+
 void BST::rangeSearchHelper(Node*& root, string &value1, string &value2){
     if(root == NULL){
         return;
@@ -108,9 +113,7 @@ void BST::rangeSearchHelper(Node*& root, string &value1, string &value2){
         rangeSearchHelper(root->right, value1, value2);
     }
 }
-/*const Node* BST::getRoot(){
-    return root;
-}*/
+
 void BST::Delete(Node*& root){
     if(root != NULL){
         Delete(root->left);
