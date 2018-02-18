@@ -4,28 +4,80 @@
 #include "HTable.h"
 #include <ctime>
 #include <iostream>
+#include <cstdlib>
 #include <sstream>
 #include <fstream>
 #include <experimental/filesystem>
 using namespace std;
 namespace fs = std::experimental::filesystem;
 int main(){
-    string listNames[10] = {"ree", "eer", "a", 
-                            "b", "c", "ee", 
-                            "z", "b", "wow", "reee"};
-    /*for(auto& p: fs::recursive_directory_iterator("hotels")){
-        cout << p.path();
-    }*/
-
-    BST testBST;
-    unsigned int x = 10;
-    string input = "";
-    HTable testHTable(x);
-   // cout << "This passed" << endl;
-    for(int i = 0; i < 10; i++){
-        testBST.insert(listNames[i]);
-        testHTable.insert(listNames[i]);
+    vector <string> store;
+    string str;
+    for(auto& p: fs::recursive_directory_iterator("hotelssmall")){
+        if(is_regular_file(status(p))){
+            ifstream inFile(p.path());
+            if(!inFile){
+                cerr << "Unable to open file";
+                exit(1);
+            }
+            while(getline(inFile, str)){
+                istringstream stream(str);
+                string word;
+                while(stream >> word){
+                    unsigned int strCount = 0;
+                    if(word.length() > 1){
+                    for(unsigned int i = 0; i < word.length(); i++){
+                        if(isalpha(word.at(i)) || (ispunct(word.at(i)) &&
+                            (word.at(i) == '_' ||
+                            word.at(i) == ',' ||
+                            word.at(i) == '.' ||
+                            word.at(i) == '-'))){
+                                strCount++;
+                        }
+                    }
+                    }
+                    if(strCount == word.length()){
+                        store.push_back(word);
+                    }
+                }
+            }
+            inFile.close();
+        }
     }
+
+    //Begin construction of BST and HTable
+    BST testBST;
+    unsigned int x = store.size() * 3 / 2;
+    string input = "";
+    cout << "HTable and BST created with size: " << store.size() << endl;
+    HTable testHTable(x);
+    //Inserting each word into both BST and HTable
+    for(unsigned int i = 0; i < store.size(); i++){
+        testBST.insert(store[i]);
+        testHTable.insert(store[i]);
+    }
+    //Testing run times for search, insert, delete, sort, rangeQuery
+    ifstream inputFile;
+    inputFile.open("input.txt");
+    string text;
+    int start_b = clock();
+    while(inputFile >> text){
+    testBST.remove(text);
+    }
+    int stop_b = clock();
+    inputFile.close();
+
+    string text2;
+    inputFile.open("input.txt");
+    int start_h = clock();
+    while(inputFile >> text2){
+    testHTable.remove(text2);
+    }
+    int stop_h = clock();
+    
+
+    cout << "BST rangeSearch: " << (stop_b - start_b) / double(CLOCKS_PER_SEC) << "s" << endl;
+    cout << "Hash rangeSearch: " << (stop_h - start_h) / double(CLOCKS_PER_SEC) << "s" << endl;
 
     do{
         getline(cin, input);
@@ -35,7 +87,7 @@ int main(){
         switch(command){
             //perform search function
     case 1: 
-    {        string input = "";
+    {       string input = "";
             cin >> input;
             int start_b = clock();
             testBST.search(input);
@@ -44,9 +96,8 @@ int main(){
             testHTable.search(input);
             int stop_h = clock();
             if(testHTable.search(input) == testBST.search(input)){
-            cout << boolalpha <<testHTable.search(input) << endl;
-            cout << "BST: " << (stop_b - start_b)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
-            cout << "Hash: " << (stop_h - start_h)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
+            cout << "BST: " << (stop_b - start_b)/double(CLOCKS_PER_SEC) << "s" << endl;
+            cout << "Hash: " << (stop_h - start_h)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << endl;
             }
     }
@@ -61,8 +112,8 @@ int main(){
             int start2_h = clock();
             testHTable.insert(input2);
             int stop2_h = clock();
-            cout << "BST: " << (stop2_b - start2_b)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
-            cout << "Hash: " << (stop2_h - start2_h)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
+            cout << "BST: " << (stop2_b - start2_b)/double(CLOCKS_PER_SEC) << "s" << endl;
+            cout << "Hash: " << (stop2_h - start2_h)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << endl;
             break;
     }
@@ -73,12 +124,11 @@ int main(){
             int start3_b = clock();
             testBST.remove(input3);
             int stop3_b = clock();
-            cout << "BST runs" << endl;
             int start3_h = clock();
             testHTable.remove(input3);
             int stop3_h = clock();
-            cout << "BST: " << (stop3_b - start3_b)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
-            cout << "Hash: " << (stop3_h - start3_h)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
+            cout << "BST: " << (stop3_b - start3_b)/double(CLOCKS_PER_SEC) << "s" << endl;
+            cout << "Hash: " << (stop3_h - start3_h)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << endl;
             break;
     }
@@ -93,12 +143,12 @@ int main(){
             testHTable.sort(input4);
             int stop4_h = clock();
 
-            cout << "BST: " << (stop4_b - start4_b)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
-            cout << "Hash: " << (stop4_h - start4_h)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
+            cout << "BST: " << (stop4_b - start4_b)/double(CLOCKS_PER_SEC) << "s" << endl;
+            cout << "Hash: " << (stop4_h - start4_h)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << endl;
             break;
     }
-            //perform range search function, requires 2 integer inputs
+            //perform range search function, requires 2 string inputs
     case 5: 
     {       string rangeMin = "", rangeMax = "";
             cin >> rangeMin >> rangeMax;
@@ -110,8 +160,8 @@ int main(){
             testHTable.rangeSearch(rangeMin, rangeMax);
             int stop5_h = clock();
 
-            cout << "BST: " << (stop5_b - start5_b)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
-            cout << "Hash: " << (stop5_h - start5_h)/double(CLOCKS_PER_SEC)*1000 << "s" << endl;
+            cout << "BST: " << (stop5_b - start5_b)/double(CLOCKS_PER_SEC) << "s" << endl;
+            cout << "Hash: " << (stop5_h - start5_h)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << endl;
             break;
     }

@@ -51,53 +51,50 @@ bool HTable::search(string &value){
 }
 
 void HTable::insert(string &value){
-    unsigned int index;
+    unsigned int index = hash(value);
     bool foundSpace = false;
     //if word is already in table
-    if(usedSize >= tableSize){
-        return;
-    }
-    if(search(value)){
-       table[locationStore]->count++;
-    }
-    else{
-        //creates new node and inserts to empty space
-        index = hash(value);
-        while(!foundSpace){
-            if(table[index] == NULL){
-                table[index] = new Node();
-                table[index]->word = value;
-                table[index]->count = 1;
-                hadOccupied[index] = true;
-                usedSize++;
-                foundSpace = true;
-            }
-            else{
-                index++;
-                if(index == tableSize){
-                    index = 0;
-                }
-            }
+    while(!foundSpace){
+        if(table[index] != NULL && table[index]->word == value){
+    table[index]->count++;
+            foundSpace = true;
+        }
+        else if(table[index] == NULL){
+            table[index] = new Node();
+            table[index]->word = value;
+            table[index]->count = 1;
+            hadOccupied[index] = true;
+            usedSize++;
+            foundSpace = true;
+        }
+        else{
+            index = (index + 1) % tableSize;
         }
     }
 }
 
 void HTable::remove(string &value){
-    int index;
+    int index = hash(value);
+    bool wordFound = false;
     //check first to see if word is in table
-    if(search(value)){
-        index = locationStore;
-        if(table[index]->count > 1){
-            table[index]->count--;
+    while(!wordFound){
+        if(table[index] != NULL && table[index]->word == value){
+            if(table[index]->count > 1){
+                table[index]->count--;
+            }
+            else{
+                delete table[index];
+                table[index] = NULL;
+                usedSize--;
+            }
+            wordFound = true;
+        }
+        else if(table[index] == NULL){
+            return;
         }
         else{
-            delete table[index];
-            table[index] = NULL;
-            usedSize--;
+            index = (index + 1) % tableSize;
         }
-    }
-    else{
-        cout << "Value not found." << endl;
     }
 }
 
@@ -111,7 +108,7 @@ void HTable::sort(string &filePath){
     }
     //need to use sort using O(log(n)) algorithm
     ofstream myfile;
-    myfile.open(filePath);
+    myfile.open(filePath, fstream::app);
     std::sort(sortVector.begin(), sortVector.end());
     for(unsigned int i = 0; i < sortVector.size(); i++){
         myfile << sortVector[i] << endl;
@@ -122,14 +119,12 @@ void HTable::sort(string &filePath){
 
 void HTable::rangeSearch(string &value1, string &value2){
 //prints out words between two strings
-    if(search(value1) && search(value2)){
         for(unsigned int i = 0; i < tableSize; i++){
             if(table[i] != NULL && 
                 table[i]->word > value1 && table[i]->word < value2){
         cout << table[i]->word << endl;
             }
         }
-    }
     
 }
 

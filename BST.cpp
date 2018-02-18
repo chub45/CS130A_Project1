@@ -47,7 +47,10 @@ bool BST::searchHelper(Node*& root, string &value){
 }
 
 void BST::removeHelper(Node*& root, string &value){
-    if(root->word > value){
+    if(root == NULL){
+        return;
+    }
+    else if(root->word > value){
         removeHelper(root->left, value);
     }
     else if(root->word < value){
@@ -90,15 +93,16 @@ void BST::findMinHelper(Node* root, string &value){
 
 void BST::sort(string &filePath){
     ofstream myfile;
-    myfile.open(filePath);
+    myfile.open(filePath, fstream::app);
     sorter(root, myfile);
+    myfile << endl;
     myfile.close();
 }
 
 void BST::sorter(Node* root, ofstream& myfile){
     if(root != NULL){
     sorter(root->left, myfile);
-    myfile << root->word << "ree" << endl;
+    myfile << root->word << endl;
     sorter(root->right, myfile);
     }
 }
