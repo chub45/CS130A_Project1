@@ -18,7 +18,7 @@ HTable(unsigned int size);
 unsigned int hash(std::string &value);
 bool search(std::string &value);
 void insert(std::string &value);
-bool remove(std::string &value);
+void remove(std::string &value);
 void sort(std::string &filePath);
 void rangeSearch(std::string &value1, std::string &value2);
 //destructor

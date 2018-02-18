@@ -34,23 +34,17 @@ unsigned int HTable::hash(string &value){
 //otherwise returns false
 bool HTable::search(string &value){
     unsigned int index = hash(value);
-    bool objectFound = false;
-    while(!objectFound){
+    while(true){
         if(table[index] == NULL && 
            hadOccupied[index] == false){
-            locationStore = 0;
             return false;
         }
         else if(table[index] != NULL && table[index]->word == value){
             locationStore = index;
-            objectFound = true;
             return true;
         }
         else{
-            index++;
-            if(index == tableSize){
-                index = 0;
-            }
+            index = (index + 1) % tableSize;
         }
     }
     return false;
@@ -61,7 +55,6 @@ void HTable::insert(string &value){
     bool foundSpace = false;
     //if word is already in table
     if(usedSize >= tableSize){
-        cout << "Cannot add anymore values. " << endl;
         return;
     }
     if(search(value)){
@@ -89,24 +82,22 @@ void HTable::insert(string &value){
     }
 }
 
-bool HTable::remove(string &value){
+void HTable::remove(string &value){
     int index;
     //check first to see if word is in table
     if(search(value)){
         index = locationStore;
         if(table[index]->count > 1){
             table[index]->count--;
-            return true;
         }
         else{
             delete table[index];
             table[index] = NULL;
             usedSize--;
-            return true;
         }
     }
     else{
-        return false;
+        cout << "Value not found." << endl;
     }
 }
 
@@ -131,24 +122,12 @@ void HTable::sort(string &filePath){
 
 void HTable::rangeSearch(string &value1, string &value2){
 //prints out words between two strings
-    unsigned int front = 0, back = tableSize;
     if(search(value1) && search(value2)){
         for(unsigned int i = 0; i < tableSize; i++){
-            if(table[i]->word == value1){
-                front = i;
-                break;
+            if(table[i] != NULL && 
+                table[i]->word > value1 && table[i]->word < value2){
+        cout << table[i]->word << endl;
             }
-        }
-        for(unsigned int i = front; i < tableSize; i++){
-            if(table[i]->word == value2){
-                back = i;
-                break;
-            }
-        }
-        for(unsigned int i = front; i < back; i++){
-           if(table[i] != NULL){ 
-                cout << table[i] << endl; 
-           }
         }
     }
     
@@ -158,6 +137,7 @@ HTable::~HTable(){
     for(unsigned int i = 0; i < tableSize; i++){
         delete table[i];
     }
+    delete[] hadOccupied;
     delete[] table;
 }
 
