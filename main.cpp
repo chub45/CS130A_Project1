@@ -49,36 +49,12 @@ int main(){
     BST testBST;
     unsigned int x = store.size() * 3 / 2;
     string input = "";
-    cout << "HTable and BST created with size: " << store.size() << endl;
     HTable testHTable(x);
     //Inserting each word into both BST and HTable
     for(unsigned int i = 0; i < store.size(); i++){
         testBST.insert(store[i]);
         testHTable.insert(store[i]);
     }
-    //Testing run times for search, insert, delete, sort, rangeQuery
-    ifstream inputFile;
-    inputFile.open("input.txt");
-    string text;
-    int start_b = clock();
-    while(inputFile >> text){
-    testBST.remove(text);
-    }
-    int stop_b = clock();
-    inputFile.close();
-
-    string text2;
-    inputFile.open("input.txt");
-    int start_h = clock();
-    while(inputFile >> text2){
-    testHTable.remove(text2);
-    }
-    int stop_h = clock();
-    
-
-    cout << "BST rangeSearch: " << (stop_b - start_b) / double(CLOCKS_PER_SEC) << "s" << endl;
-    cout << "Hash rangeSearch: " << (stop_h - start_h) / double(CLOCKS_PER_SEC) << "s" << endl;
-
     do{
         getline(cin, input);
         stringstream store(input);
@@ -96,6 +72,7 @@ int main(){
             testHTable.search(input);
             int stop_h = clock();
             if(testHTable.search(input) == testBST.search(input)){
+            cout << boolalpha << testHTable.search(input) << endl;
             cout << "BST: " << (stop_b - start_b)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << "Hash: " << (stop_h - start_h)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << endl;

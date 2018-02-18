@@ -1,10 +1,10 @@
 ### CS130A_Project1
-# Benson Chu
+## Benson Chu
 
 
 #Instructions
-..* unzip folder
-..* move all files into desired directory
-..* type "make" and press [enter]
-..* type"./main" and press [enter]
+    1. unzip folder
+    2. move all files into desired directory
+    3. type "make" and press [enter]
+    4. type"./main" and press [enter]
 

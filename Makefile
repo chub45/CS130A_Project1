@@ -9,7 +9,7 @@ EXECUTABLE = main
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE) : $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(LDFLAGS) $(OBJECTS) -lstdc++fs -o $@
 
 %.o: %.cpp $(DEPS)
 	$(CC) $(CFLAGS) *.cpp
