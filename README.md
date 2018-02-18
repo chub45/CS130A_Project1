@@ -1,8 +1,8 @@
 ### CS130A_Project1
 ## Instructions <br/>
-    1. unzip folderi <br/>
-    2. move all files into desired directory <br/>
-    3. type "make" and press [enter] <br/>
-    4. type"./main" and press [enter] <br/>
-    5. enjoy testing! <br/>
+    1. unzip folderi 
+    2. move all files into desired directory 
+    3. type "make" and press [enter] 
+    4. type"./main" and press [enter] 
+    5. enjoy testing!
 
