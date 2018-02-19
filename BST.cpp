@@ -91,15 +91,15 @@ void BST::findMinHelper(Node* root, string &value){
         value = root->word;
 }
 
-void BST::sort(string &filePath){
+void BST::sort(){
     ofstream myfile;
-    myfile.open(filePath, fstream::app);
+    myfile.open("output.txt", fstream::app);
     sorter(root, myfile);
     myfile << endl;
     myfile.close();
 }
 
-void BST::sorter(Node* root, ofstream& myfile){
+void BST::sorter(Node* root, ofstream &myfile){
     if(root != NULL){
     sorter(root->left, myfile);
     myfile << root->word << endl;

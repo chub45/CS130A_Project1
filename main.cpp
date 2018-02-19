@@ -111,15 +111,13 @@ int main(){
     }
             //perform sort function, reads in file to be written to
     case 4: 
-    {       string input4 = "";
-            cin >> input4;
-            int start4_b = clock();
-            testBST.sort(input4);
+    {       int start4_b = clock();
+            testBST.sort();
             int stop4_b = clock();
             int start4_h = clock();
-            testHTable.sort(input4);
+            testHTable.sort();
             int stop4_h = clock();
-
+            cout << "output.txt" << endl;
             cout << "BST: " << (stop4_b - start4_b)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << "Hash: " << (stop4_h - start4_h)/double(CLOCKS_PER_SEC) << "s" << endl;
             cout << endl;

@@ -19,7 +19,7 @@ unsigned int hash(std::string &value);
 bool search(std::string &value);
 void insert(std::string &value);
 void remove(std::string &value);
-void sort(std::string &filePath);
+void sort();
 void rangeSearch(std::string &value1, std::string &value2);
 //destructor
 ~HTable();

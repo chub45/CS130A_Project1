@@ -98,7 +98,7 @@ void HTable::remove(string &value){
     }
 }
 
-void HTable::sort(string &filePath){
+void HTable::sort(){
 //prints out words lexicographically as list and write them to a file
     vector<string> sortVector;
     for(unsigned int i = 0; i < tableSize; i++){
@@ -108,7 +108,7 @@ void HTable::sort(string &filePath){
     }
     //need to use sort using O(log(n)) algorithm
     ofstream myfile;
-    myfile.open(filePath, fstream::app);
+    myfile.open("output.txt", fstream::app);
     std::sort(sortVector.begin(), sortVector.end());
     for(unsigned int i = 0; i < sortVector.size(); i++){
         myfile << sortVector[i] << endl;

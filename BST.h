@@ -20,7 +20,7 @@ BST();
 void insert(std::string &value){insertHelper(root, value);}
 bool search(std::string &value){return searchHelper(root, value);}
 void remove(std::string &value){removeHelper(root, value);}
-void sort(std::string &filePath);
+void sort();
 void rangeSearch(std::string &value1, std::string &value2){rangeSearchHelper(root, value1, value2);}
 //destructor
 ~BST();
